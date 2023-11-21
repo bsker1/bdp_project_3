@@ -4,7 +4,7 @@ import pandas as pd
 import statsmodels as sm
 
 def main():
-    EssayFrame = pd.read_csv("../raw_data.csv")
+    EssayFrame = pd.read_csv("../sampled_data.csv")
 
     FactorFrame = EssayFrame.copy(deep=False)
 
@@ -21,7 +21,7 @@ def main():
     print(FactorFrame)
 
     #Make sure to write new dataframe
-    #Write dataframe to csv here...
+    FactorFrame.to_csv("../FactorizedData.csv")
     
 if __name__ == '__main__':
     main()
