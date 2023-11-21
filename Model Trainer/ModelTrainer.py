@@ -2,6 +2,8 @@ import numpy as np
 import scipy as sp
 import pandas as pd
 import statsmodels.api as sm
+import sklearn as sk
+from sklearn.linear_model import LogisticRegression
 
 def main(rng):
     TrainingFrame = pd.read_csv("../FactorizedData.csv")
@@ -18,21 +20,23 @@ def main(rng):
     ResponseCollection = TrainingFrame["label"]
 
     #exog
-    Input = [TrainingFrame["WordCount"]]
+    Input = TrainingFrame["WordCount"]
 
-    # weights
+    # weights unused will be used on weighted LogisticRegression in scikit
     Weights = list()
     for X in range(Contestants):
         Weights.append(StartingCof + rng.random())
 
-    print(Weights)
-    ContestantsList = []
-    for T in range(Trials):
-        for C in range(Contestants):
-            model = sm.WLS(ResponseCollection, Input, Weights[C])
-            results = model.fit()
-            print(results.summary())
-            ContestantsList.append(results)
+    #Statsmodel Logistic regression (needed to classifiy binary outputs)
+    model = sm.Logit(ResponseCollection, Input)
+    results = model.fit()
+    print(results.summary())
+
+    LogReg = LogisticRegression()
+    LogReg.fit(Input, ResponseCollection)
+
+    #Insert a test set to predict if it AI or not
+    #LogReg.predict()
 
 
 if __name__ == '__main__':
