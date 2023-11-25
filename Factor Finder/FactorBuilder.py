@@ -1,7 +1,7 @@
 import numpy as np
-import scipy as sp
 import pandas as pd
-import statsmodels as sm
+import re
+from readability import Readability
 
 def main():
     EssayFrame = pd.read_csv("../sampled_data.csv")
@@ -15,7 +15,22 @@ def main():
     # Get Word Count
     FactorFrame.insert(column="WordCount", loc=2, value=0)
     for pos, row in FactorFrame.iterrows():
-            FactorFrame.at[pos, "WordCount"]= len(row["text"].split())
+        FactorFrame.at[pos, "WordCount"] = len(row["text"].split())
+
+    # Get pronoun Count
+    Pronouns = re.compile(r'\b(I|me|myself|mine|my|we|us|ourselves|ours|our|Me|Myself|Mine|My|We|Us|Outselves|Ours|Our)\b')
+    FactorFrame.insert(column="PronounCount", loc=3, value=0)
+    for pos, row in FactorFrame.iterrows():
+        FactorFrame.at[pos, "PronounCount"] = len(Pronouns.findall(row["text"]))
+
+    # Get Dale-Chall Readabilty
+    # import nltk
+    # nltk.download()
+    # Run the commands above in the python terminal and download all
+    FactorFrame.insert(column="Readabilty", loc=4, value=0)
+    for pos, row in FactorFrame.iterrows():
+        FactorFrame.at[pos, "Readabilty"] = Readability(row["text"]).dale_chall().score
+
 
     #Print Dataframe
     print(FactorFrame)

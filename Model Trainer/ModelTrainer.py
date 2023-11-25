@@ -11,16 +11,13 @@ def main(rng):
     Trials = 1
     Contestants = 10
     StartingCof = 0.5 # 1 is AI 0 is human
-    Factors = 1 # Update for every factor
-
-    HumanOrAI = np.array((Contestants + 1)) # Where the size is 1 X Contenstants
-    Data = np.array((Contestants, Factors)) # Obs X Factor where Obs is that number of Contestants and Factor is the amount of factors
+    Factors = 3 # Update for every factor
 
     #endog
     ResponseCollection = TrainingFrame["label"]
 
     #exog
-    Input = TrainingFrame["WordCount"]
+    Input = TrainingFrame[["WordCount", "PronounCount", "Readabilty"]].to_numpy()
 
     # weights unused will be used on weighted LogisticRegression in scikit
     Weights = list()
