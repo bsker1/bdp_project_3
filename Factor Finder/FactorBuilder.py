@@ -9,8 +9,8 @@ def main():
     FactorFrame = EssayFrame.copy(deep=False)
 
     #Data cleaning
-    #Thanks to chatgpt for this wonderful 1 liner to drop all essays with less than 50 words
-    FactorFrame.drop(FactorFrame[FactorFrame["text"].apply(lambda x: len(x.split()) < 50)].index)
+    #Thanks to chatgpt for this wonderful 1 liner to drop all essays with less than 100 words
+    FactorFrame.drop(FactorFrame[FactorFrame["text"].apply(lambda x: len(x.split()) < 101)].index)
 
     # Get Word Count
     FactorFrame.insert(column="WordCount", loc=2, value=0)
@@ -31,6 +31,19 @@ def main():
     for pos, row in FactorFrame.iterrows():
         FactorFrame.at[pos, "Readabilty"] = Readability(row["text"]).dale_chall().score
 
+    # Get Paragraph Count
+    FactorFrame.insert(column="ParagraphCount", loc=5, value=0)
+    for pos, row in FactorFrame.iterrows():
+            FactorFrame.at[pos, "ParagraphCount"] = len(row["text"].split("\n"))
+
+    # Get Paragraph size choesion (Standard Deviation)
+    FactorFrame.insert(column="ParagraphSizeCohesion", loc=6, value=0)
+    for pos, row in FactorFrame.iterrows():
+        ParagraphList = row["text"].split("\n")
+        ParagraphSizes = []
+        for Paragraph in ParagraphList:
+            ParagraphSizes.append(len(Paragraph))
+        FactorFrame.at[pos, "ParagraphSizeCohesion"] = np.std(ParagraphSizes)
 
     #Print Dataframe
     print(FactorFrame)

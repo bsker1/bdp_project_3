@@ -25,20 +25,22 @@ def generate_indicies(in_df, in_size):
     return used_indicies
 
 
+FileNames = ["../sampled_data.csv", "../training_data.csv"]
 
-# separate data into AI vs human
-zero_df = pd.read_csv('../raw_data.csv').query('label == 0')
-one_df = pd.read_csv('../raw_data.csv').query('label == 1')
+for Name in FileNames:
+    # separate data into AI vs human
+    zero_df = pd.read_csv('../raw_data.csv').query('label == 0')
+    one_df = pd.read_csv('../raw_data.csv').query('label == 1')
 
-# pick 50 AI excerpts, 50 human
-zero_indicies = generate_indicies(zero_df, 50)
-one_indicies = generate_indicies(one_df, 50)
+    # pick 50 AI excerpts, 50 human
+    zero_indicies = generate_indicies(zero_df, 50)
+    one_indicies = generate_indicies(one_df, 50)
 
-# write subset_df to new csv file
-subset_df = pd.DataFrame(columns=['text', 'label'])
-for i in range(50):
-    subset_df.loc[i] = [zero_df.iloc[zero_indicies[i]].iloc[0], '0']
-for i in range(50):
-    subset_df.loc[i + 50] = [one_df.iloc[one_indicies[i]].iloc[0], '1']
+    # write subset_df to new csv file
+    subset_df = pd.DataFrame(columns=['text', 'label'])
+    for i in range(50):
+        subset_df.loc[i] = [zero_df.iloc[zero_indicies[i]].iloc[0], '0']
+    for i in range(50):
+        subset_df.loc[i + 50] = [one_df.iloc[one_indicies[i]].iloc[0], '1']
 
-subset_df.to_csv('../sampled_data.csv', encoding='utf-8', index=False)
+    subset_df.to_csv(Name, encoding='utf-8', index=False)

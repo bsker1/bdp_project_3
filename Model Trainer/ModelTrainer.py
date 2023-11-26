@@ -8,33 +8,26 @@ from sklearn.linear_model import LogisticRegression
 def main(rng):
     TrainingFrame = pd.read_csv("../FactorizedData.csv")
 
-    Trials = 1
-    Contestants = 10
-    StartingCof = 0.5 # 1 is AI 0 is human
-    Factors = 3 # Update for every factor
-
     #endog
     ResponseCollection = TrainingFrame["label"]
 
     #exog
-    Input = TrainingFrame[["WordCount", "PronounCount", "Readabilty"]].to_numpy()
-
-    # weights unused will be used on weighted LogisticRegression in scikit
-    Weights = list()
-    for X in range(Contestants):
-        Weights.append(StartingCof + rng.random())
+    Input = TrainingFrame[["WordCount", "PronounCount", "Readabilty", "ParagraphCount", "ParagraphSizeCohesion"]].to_numpy()
 
     #Statsmodel Logistic regression (needed to classifiy binary outputs)
     model = sm.Logit(ResponseCollection, Input)
     results = model.fit()
     print(results.summary())
 
-    LogReg = LogisticRegression()
-    LogReg.fit(Input, ResponseCollection)
+    Xtrain = Input
+    Xtest = None #Get a dataframe of factorized test data
+    Ytrain = ResponseCollection
+    Ytest = None #Get a series of labels of Xtest data
 
-    #Insert a test set to predict if it AI or not
-    #LogReg.predict()
-
+    Contestants = 10
+    StartWeight = None #Create a dict of labels and weights constant
+    #Apply randomness
+    #Run test selected the best R^2 and redo randomness
 
 if __name__ == '__main__':
     rng = np.random.default_rng()
