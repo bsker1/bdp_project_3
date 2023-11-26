@@ -1,8 +1,6 @@
 import numpy as np
-import scipy as sp
 import pandas as pd
 import statsmodels.api as sm
-import sklearn as sk
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
